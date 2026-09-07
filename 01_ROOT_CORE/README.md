@@ -1,81 +1,96 @@
-# DOC-FULL-NR Smart Worksheet — Complete Fresh + Subjects
+# DOC-FULL-NR Smart Worksheet — Full GitHub Browser Upload Edition
 
-ชุดเต็มพร้อมใช้งานกับ Firebase Project `doc-full-nr`
+Firebase project:
 
-## Admin
+`doc-full-nr`
+
+Admin:
 
 - Email: `pisite.2543nac@gmail.com`
-- Login ID: `pisit2000`
-- Password: ตั้งเองใน Firebase Authentication / หน้า Setup และ **ไม่ถูกฝังใน GitHub**
+- Firestore Login ID: `pisit2000`
 
-## รายวิชาที่ติดตั้งอัตโนมัติ
+This is the **full source project**, plus a one-click tool that splits the project
+into 5 smaller GitHub browser-upload sets.
 
-เมื่อเปิด `/setup` และสร้าง Admin สำเร็จ ระบบจะติดตั้งรายวิชาจากตารางสอนภาคเรียน `1/2569` จำนวน 13 รายการอัตโนมัติ:
+## Why this edition exists
 
-- 20001-1001 — สุขภาพความปลอดภัยและสิ่งแวดล้อม
-- 20001-1004 — กฎหมายแรงงาน
-- 21900-1005 — เครือข่ายคอมพิวเตอร์
-- 21901-2008 — การออกแบบส่วนติดต่อผู้ใช้
-- 21901-2017 — เทคโนโลยีการนำเข้าข้อมูลเข้าสู่ระบบคอมพิวเตอร์
-- 21901-2020 — ปฏิบัติงานบริการคอมพิวเตอร์และเทคโนโลยีสารสนเทศ
-- 21910-2010 — การเขียนโปรแกรมภาษาคอมพิวเตอร์
-- 31901-2001 — การออกแบบส่วนติดต่อผู้ใช้ขั้นสูง
-- 31901-2004 — การพัฒนาซอฟต์แวร์ด้วยเทคโนโลยี Front-End
-- 31901-2009 — การพัฒนาซอฟต์แวร์สำหรับอุปกรณ์เคลื่อนที่
-- 31910-0004 — การเขียนโปรแกรมคอมพิวเตอร์
-- Home Room — กิจกรรมโฮมรูม (ชั่วโมงพบครูที่ปรึกษา)
-- PLC — ชุมชนการเรียนรู้ทางวิชาชีพ (PLC)
+The previous GitHub Actions method required a hidden `.github` folder, which can
+be awkward to select in Windows/browser upload dialogs.
 
-ระบบเก็บคอลัมน์ `ท. / ป. / น. / ช.` ตามที่ปรากฏในตารางต้นฉบับ
+This edition avoids that problem entirely.
 
-## วิธีติดตั้งครั้งแรก
+It builds the Vite/React website into:
 
-1. แตก ZIP
-2. ดับเบิลคลิก `00_INSTALL_DOC_FULL_NR.bat`
-3. รอ `SETUP SUCCESS - DOC-FULL-NR`
-4. เปิด `http://localhost:5174/setup`
-5. ตั้งรหัสผ่าน Admin
-6. กดสร้าง Admin และฐานข้อมูลเริ่มต้น
+`docs/`
 
-ระบบจะสร้าง:
-- Firebase Authentication Admin
-- `users/{UID}`
-- `systemSettings/general`
-- `systemSettings/security`
-- `subjects/*` รายวิชาทั้งหมดด้านบน
+and GitHub Pages serves the site directly from the `main` branch `/docs` folder.
 
-## เปิดครั้งต่อไป
+## One-click preparation
 
-`01_RUN_DOC_FULL_NR.bat`
+Run:
 
-## Deploy Hosting
+`00_PREPARE_ALL_FOR_GITHUB.bat`
 
-`02_DEPLOY_WEBSITE.bat`
+It automatically:
 
-## Deploy Rules
+1. installs packages if needed
+2. logs in to Firebase
+3. fetches Firebase Web config for `doc-full-nr`
+4. deploys Firestore Rules and indexes
+5. builds the production website
+6. creates `docs/`
+7. creates `GITHUB_UPLOAD_SETS/`
 
-`03_DEPLOY_RULES.bat`
+## Upload sets
 
-## GitHub
+Upload and commit in this exact order:
 
-สร้าง Repository เปล่าบน GitHub แล้วเปิด:
+1. `01_ROOT_CORE`
+2. `02_SRC_CORE`
+3. `03_SRC_PAGES`
+4. `04_SCRIPTS_PUBLIC_TOOLS`
+5. `05_DOCS_WEBSITE_UPLOAD_LAST`
 
-`06_GITHUB_PUSH.bat`
+For every set, upload the **contents inside the set**, not the numbered set folder itself.
 
-จากนั้นวาง URL Repository เช่น:
+## GitHub Pages
 
-`https://github.com/USERNAME/REPOSITORY.git`
+After all 5 sets are committed:
 
-`.gitignore` ป้องกัน `.env.local`, private key, `node_modules` และ build output ไม่ให้ขึ้น GitHub
+`Settings → Pages`
 
-## หมายเหตุความปลอดภัย
+Select:
 
-ไม่เก็บ Password ใน Firestore หรือ Source Code
+- Source: `Deploy from a branch`
+- Branch: `main`
+- Folder: `/docs`
 
-คอลเลกชันต่อไปนี้ยังล็อก Browser write:
+The online routes use `HashRouter`, for example:
+
+`#/login`
+
+## Included application modules
+
+- Firebase Authentication admin login/setup
+- Firestore Admin profile
+- System settings
+- Users view
+- Subjects
+- preset semester 1/2569 subjects
+- Classrooms
+- Worksheets
+- Draft / Publish / Close
+- Firestore Security Rules
+- Firestore indexes
+- Firebase Hosting config
+- GitHub Pages static build
+- local Windows launch/deploy tools
+
+Sensitive collections remain browser-write locked:
+
 - submissions
 - submissionGrades
 - submissionOverrides
 - auditLogs
 
-เพื่อเตรียมต่อ Cloud Functions ฝั่ง Server
+These are reserved for a future Cloud Functions / server layer.

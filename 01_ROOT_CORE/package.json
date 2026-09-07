@@ -1,6 +1,6 @@
 {
-  "name": "doc-full-nr-github-upload-sets-ready",
-  "version": "5.1.0",
+  "name": "doc-full-nr-full-github-browser-upload",
+  "version": "6.0.0",
   "private": true,
   "type": "module",
   "scripts": {

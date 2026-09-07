@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+.firebase/
+firebase-debug.log
+*.log
+serviceAccountKey.json
+firebase-adminsdk*.json
+.nrtech-local/

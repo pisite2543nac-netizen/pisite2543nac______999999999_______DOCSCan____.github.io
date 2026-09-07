@@ -1,0 +1,100 @@
+DOC-FULL-NR — FULL GITHUB UPLOAD SEQUENCE
+=========================================
+
+PURPOSE
+-------
+This edition contains the FULL source project and creates 5 smaller upload sets
+for GitHub's browser uploader. It does NOT require uploading a hidden .github folder.
+
+BEFORE UPLOADING
+----------------
+1. Extract this ZIP.
+2. Double-click:
+   00_PREPARE_ALL_FOR_GITHUB.bat
+3. Wait for:
+   EVERYTHING IS READY FOR GITHUB
+4. The folder GITHUB_UPLOAD_SETS opens automatically.
+
+UPLOAD ORDER
+------------
+Upload and COMMIT one set at a time.
+
+SET 1
+GITHUB_UPLOAD_SETS\01_ROOT_CORE
+
+SET 2
+GITHUB_UPLOAD_SETS\02_SRC_CORE
+
+SET 3
+GITHUB_UPLOAD_SETS\03_SRC_PAGES
+
+SET 4
+GITHUB_UPLOAD_SETS\04_SCRIPTS_PUBLIC_TOOLS
+
+SET 5 — UPLOAD LAST
+GITHUB_UPLOAD_SETS\05_DOCS_WEBSITE_UPLOAD_LAST
+
+FOR EACH SET
+------------
+1. Open the numbered folder.
+2. Select the contents INSIDE it.
+3. Drag the contents into GitHub > Add file > Upload files.
+4. Wait until all files finish uploading.
+5. Commit changes.
+6. Continue with the next numbered set.
+
+DO NOT upload the numbered folder itself.
+
+AFTER ALL 5 SETS
+----------------
+GitHub repository:
+Settings > Pages
+
+Set:
+Source = Deploy from a branch
+Branch = main
+Folder = /docs
+
+Click Save.
+
+Then wait for Pages deployment.
+
+TEST LINK
+---------
+Open your normal GitHub Pages link and add:
+
+#/login
+
+Example:
+https://USERNAME.github.io/REPOSITORY/#/login
+
+EXPECTED REPOSITORY ROOT
+------------------------
+docs/
+public/
+scripts/
+src/
+package.json
+vite.config.js
+index.html
+firebase.json
+firestore.rules
+firestore.indexes.json
+README.md
+SUBJECTS_1_2569.csv
+Windows .bat tools
+
+NO .github FOLDER IS REQUIRED FOR THIS EDITION.
+
+SECURITY
+--------
+Never upload:
+.env.local
+node_modules/
+dist/
+Service Account JSON
+Private Key
+Admin password
+
+The generated public/firebase-config.js is Firebase Web client configuration
+used by the browser and is included in the safe upload set.
