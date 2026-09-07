@@ -1,0 +1,130 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function bootstrapAdmin() {
+      return signedIn()
+        && request.auth.token.email == "pisite.2543nac@gmail.com";
+    }
+
+    function userPath() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function userExists() {
+      return signedIn() && exists(userPath());
+    }
+
+    function currentUser() {
+      return get(userPath()).data;
+    }
+
+    function active() {
+      return userExists() && currentUser().isActive == true;
+    }
+
+    function admin() {
+      return active() && currentUser().role == "admin";
+    }
+
+    function normalUser() {
+      return active() && currentUser().role == "user";
+    }
+
+    match /users/{uid} {
+      allow get: if admin()
+        || (signedIn() && request.auth.uid == uid);
+
+      allow list: if admin();
+
+      // First Admin bootstrap:
+      // The real Admin email can create only its own profile.
+      allow create: if bootstrapAdmin()
+        && request.auth.uid == uid
+        && request.resource.data.uid == uid
+        && request.resource.data.email == "pisite.2543nac@gmail.com"
+        && request.resource.data.loginId == "pisit2000"
+        && request.resource.data.role == "admin"
+        && request.resource.data.isActive == true;
+
+      allow update: if admin()
+        || (
+          active()
+          && request.auth.uid == uid
+          && request.resource.data.diff(resource.data)
+            .affectedKeys()
+            .hasOnly([
+              "displayName",
+              "profileImageURL",
+              "updatedAt"
+            ])
+        );
+
+      allow delete: if admin();
+    }
+
+    match /systemSettings/{settingId} {
+      // bootstrapAdmin is allowed so first installation can create settings
+      // immediately after Firebase Authentication user creation.
+      allow read: if admin() || bootstrapAdmin();
+      allow create, update: if admin() || bootstrapAdmin();
+      allow delete: if false;
+    }
+
+    match /subjects/{subjectId} {
+      allow read: if active();
+      allow create, update, delete: if admin();
+    }
+
+    match /classrooms/{classroomId} {
+      allow read, create, update, delete: if admin();
+    }
+
+    match /worksheets/{worksheetId} {
+      allow read: if admin()
+        || (
+          normalUser()
+          && resource.data.publishedStatus == "published"
+          && resource.data.assignedUserIds is list
+          && request.auth.uid in resource.data.assignedUserIds
+        );
+
+      allow create, update, delete: if admin();
+    }
+
+    // Sensitive collections are read-controlled and browser-write locked.
+    // Cloud Functions / Admin SDK can bypass Firestore Security Rules.
+    match /submissions/{submissionId} {
+      allow read: if admin()
+        || (
+          normalUser()
+          && resource.data.userId == request.auth.uid
+        );
+      allow create, update, delete: if false;
+    }
+
+    match /submissionGrades/{gradeId} {
+      allow read: if admin();
+      allow create, update, delete: if false;
+    }
+
+    match /submissionOverrides/{overrideId} {
+      allow read: if admin();
+      allow create, update, delete: if false;
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if admin();
+      allow create, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
