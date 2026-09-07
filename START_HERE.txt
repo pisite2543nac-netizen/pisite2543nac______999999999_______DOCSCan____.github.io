@@ -1,0 +1,42 @@
+DOC-FULL-NR COMPLETE FRESH + SUBJECTS
+=====================================
+
+Firebase Project:
+doc-full-nr
+
+Admin Email:
+pisite.2543nac@gmail.com
+
+Login ID:
+pisit2000
+
+This package preloads 13 subjects from semester 1/2569.
+
+FIRST INSTALL
+1. Extract ZIP.
+2. Run 00_INSTALL_DOC_FULL_NR.bat
+3. Wait for SETUP SUCCESS - DOC-FULL-NR
+4. Open http://localhost:5174/setup
+5. Set Admin password.
+6. Click Create Admin and initial database.
+
+The setup automatically creates:
+- Admin Authentication account
+- users/{UID}
+- systemSettings/general
+- systemSettings/security
+- subjects collection with all preset subjects
+
+NEXT TIME
+01_RUN_DOC_FULL_NR.bat
+
+DEPLOY ONLINE
+02_DEPLOY_WEBSITE.bat
+
+GITHUB
+Create an empty GitHub repository, then run:
+06_GITHUB_PUSH.bat
+
+IMPORTANT
+Do not put passwords in Firestore.
+Do not commit .env.local or private keys.
