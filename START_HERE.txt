@@ -40,3 +40,14 @@ Create an empty GitHub repository, then run:
 IMPORTANT
 Do not put passwords in Firestore.
 Do not commit .env.local or private keys.
+
+
+GITHUB PAGES FIXED VERSION
+==========================
+Before uploading to GitHub Pages:
+1. Run 07_PREPARE_GITHUB_PAGES.bat
+2. Confirm public\firebase-config.js exists
+3. Upload/PUSH the CONTENTS of this folder to repository root
+4. GitHub > Settings > Pages > Source > GitHub Actions
+5. GitHub > Actions > wait for Deploy GitHub Pages to succeed
+6. Open the Pages URL; routes use #/login and #/admin
