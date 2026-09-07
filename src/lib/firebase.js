@@ -2,7 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-const config = {
+const runtimeConfig =
+  typeof window !== "undefined"
+    ? window.__FIREBASE_CONFIG__
+    : null;
+
+const envConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -11,13 +16,15 @@ const config = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-const missing = Object.entries(config)
-  .filter(([, value]) => !value)
+const config = runtimeConfig || envConfig;
+
+const missing = Object.entries(config || {})
+  .filter(([, value]) => !value || String(value).startsWith("REPLACE_"))
   .map(([key]) => key);
 
-if (missing.length) {
+if (!config || missing.length) {
   throw new Error(
-    "Firebase Web Config missing: " + missing.join(", ")
+    "Firebase Web Config is missing. Run 00_INSTALL_DOC_FULL_NR.bat before uploading to GitHub."
   );
 }
 

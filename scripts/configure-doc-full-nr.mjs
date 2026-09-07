@@ -158,5 +158,26 @@ fs.writeFileSync(
   "utf8"
 );
 
+const publicDir = path.join(root, "public");
+fs.mkdirSync(publicDir, { recursive: true });
+
+const publicConfig = {
+  apiKey: sdkConfig.apiKey,
+  authDomain: sdkConfig.authDomain,
+  projectId: sdkConfig.projectId || projectId,
+  storageBucket: sdkConfig.storageBucket,
+  messagingSenderId: sdkConfig.messagingSenderId,
+  appId: sdkConfig.appId
+};
+
+fs.writeFileSync(
+  path.join(publicDir, "firebase-config.js"),
+  "window.__FIREBASE_CONFIG__ = "
+    + JSON.stringify(publicConfig, null, 2)
+    + ";\n",
+  "utf8"
+);
+
 console.log("OK: .env.local created for doc-full-nr");
 console.log("OK: .firebaserc locked to doc-full-nr");
+console.log("OK: public/firebase-config.js created for GitHub Pages");
